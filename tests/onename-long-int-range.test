@@ -1,0 +1,17 @@
+# an out of range integer for an option with only a long name
+program OneName
+arg --number=11
+status 1
+output
+Error: Value out of range for option --number.
+onename [options]
+
+  -t <arg>
+      String option with short name only.
+  --text <arg>
+      String option with long name only.
+  -n <arg>
+      Integer option with short name only.
+  --number <arg>
+      Integer option with long name only.
+Terminated by Halt(1). 

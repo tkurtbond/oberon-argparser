@@ -6,7 +6,7 @@ output
 This is output from parsing the command line in SIMPLE.
 
 DoShortNameOnly called.
-Error: Argument required for option -i
+Error: Argument required for option -i, --integer
 simple [options] arguments...
 
   -h, --help

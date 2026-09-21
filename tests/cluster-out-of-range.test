@@ -7,7 +7,7 @@ output
 This is output from parsing the command line in SIMPLE.
 
 DoShortNameOnly called.
-Error: Value out of range for option.
+Error: Value out of range for option -i, --integer.
 simple [options] arguments...
 
   -h, --help

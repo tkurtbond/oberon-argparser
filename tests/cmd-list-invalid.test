@@ -5,7 +5,7 @@ arg -c
 arg abc
 status 1
 output
-Error: Invalid integer value for option: abc
+Error: Invalid integer value for option -c, --count: abc
 list [options] patterns...  List items.
 
   -c <arg>, --count <arg>

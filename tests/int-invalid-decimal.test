@@ -6,7 +6,7 @@ status 1
 output
 This is output from parsing the command line in SIMPLE.
 
-Error: Invalid integer value for option: 5.5
+Error: Invalid integer value for option -i, --integer: 5.5
 simple [options] arguments...
 
   -h, --help

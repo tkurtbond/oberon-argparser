@@ -5,7 +5,7 @@ status 1
 output
 This is output from parsing the command line in SIMPLE.
 
-Error: Argument required for option -s
+Error: Argument required for option -s, --string
 simple [options] arguments...
 
   -h, --help

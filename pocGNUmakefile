@@ -22,7 +22,7 @@ POC_DIR ?= $(HOME)/Repos/Oberon/Peaseblossom
 POC ?= $(POC_DIR)/build/bin/poc
 
 BUILDDIR = poc-build
-PROGRAMS = Simple Commands
+PROGRAMS = Simple Commands OneName
 
 # The rtl (Out, Strings, Modules, ...), the Args shim, and poc-build itself
 # (for ArgParser); "." is relative to the directory poc runs in.

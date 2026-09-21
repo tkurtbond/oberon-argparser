@@ -1,0 +1,16 @@
+# options with only one name work when used correctly
+program OneName
+arg -n
+arg 5
+arg -t
+arg x
+arg --text
+arg y
+arg --number
+arg 3
+status 0
+output
+DoInteger called with integer: 5
+DoString called with "x"
+DoString called with "y"
+DoInteger called with integer: 3

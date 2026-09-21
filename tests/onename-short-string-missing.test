@@ -1,0 +1,17 @@
+# a string option with only a short name, missing its argument
+program OneName
+arg -t
+status 1
+output
+Error: Argument required for option -t
+onename [options]
+
+  -t <arg>
+      String option with short name only.
+  --text <arg>
+      String option with long name only.
+  -n <arg>
+      Integer option with short name only.
+  --number <arg>
+      Integer option with long name only.
+Terminated by Halt(1). 

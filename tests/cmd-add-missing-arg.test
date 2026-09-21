@@ -4,7 +4,7 @@ arg add
 arg --name
 status 1
 output
-Error: Argument required for option --name
+Error: Argument required for option -n, --name
 add [options] items...  Add items.
 
   -n <arg>, --name <arg>

@@ -6,7 +6,7 @@ output
 This is output from parsing the command line in SIMPLE.
 
 DoShortNameOnly called.
-Error: Invalid integer value for option: s
+Error: Invalid integer value for option -i, --integer: s
 simple [options] arguments...
 
   -h, --help

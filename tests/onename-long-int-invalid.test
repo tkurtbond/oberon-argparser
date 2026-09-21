@@ -1,0 +1,18 @@
+# an invalid integer for an option with only a long name
+program OneName
+arg --number
+arg abc
+status 1
+output
+Error: Invalid integer value for option --number: abc
+onename [options]
+
+  -t <arg>
+      String option with short name only.
+  --text <arg>
+      String option with long name only.
+  -n <arg>
+      Integer option with short name only.
+  --number <arg>
+      Integer option with long name only.
+Terminated by Halt(1). 
