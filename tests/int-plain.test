@@ -1,0 +1,9 @@
+# a plain integer
+program Simple
+arg -i
+arg 5
+status 0
+output
+This is output from parsing the command line in SIMPLE.
+
+DoInteger called with integer: 5

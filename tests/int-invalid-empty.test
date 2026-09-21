@@ -1,0 +1,22 @@
+# an empty string is not an integer
+program Simple
+arg -i
+arg
+status 1
+output
+This is output from parsing the command line in SIMPLE.
+
+Error: Invalid integer value for option: 
+simple [options] arguments...
+
+  -h, --help
+      Display help message and exit.
+  -s, --string <arg>
+      Call callback on string argument.
+  -i, --integer <arg>
+      Call callback on integer argument.
+  -a
+      Option with short name only.
+  --long-name
+      Option with long name only.
+Terminated by Halt(1). 

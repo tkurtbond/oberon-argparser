@@ -1,0 +1,7 @@
+# a bare dash as an argument to a command
+program Commands
+arg add
+arg -
+status 0
+output
+add: ArgHandler called at index 2 with argument: "-"

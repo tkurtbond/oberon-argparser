@@ -1,0 +1,9 @@
+# the upper bound of the range
+program Simple
+arg -i
+arg 100
+status 0
+output
+This is output from parsing the command line in SIMPLE.
+
+DoInteger called with integer: 100

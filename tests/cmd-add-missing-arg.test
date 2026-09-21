@@ -1,0 +1,29 @@
+# a missing option argument in a command
+program Commands
+arg add
+arg --name
+status 1
+output
+Error: Argument required for option --name
+add [options] items...  Add items.
+
+  -n, --name <arg>
+      Call callback on name argument.
+
+commands [options] [command [options]] arguments...
+
+  -h, --help
+      Display help message and exit.
+  -v, --verbose
+      Call callback for verbose.
+
+add [options] items...  Add items.
+
+  -n, --name <arg>
+      Call callback on name argument.
+
+list [options] patterns...  List items.
+
+  -c, --count <arg>
+      Call callback on count argument.
+Terminated by Halt(1). 

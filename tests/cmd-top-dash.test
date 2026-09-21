@@ -1,0 +1,8 @@
+# a bare dash after a top level option
+program Commands
+arg -v
+arg -
+status 0
+output
+DoVerbose called.
+Top level ArgHandler called at index 2 with argument: "-"

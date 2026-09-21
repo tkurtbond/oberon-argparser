@@ -1,0 +1,12 @@
+# a bare dash between other arguments
+program Simple
+arg a
+arg -
+arg b
+status 0
+output
+This is output from parsing the command line in SIMPLE.
+
+ArgHandler called at index 1 with argument: "a"
+ArgHandler called at index 2 with argument: "-"
+ArgHandler called at index 3 with argument: "b"

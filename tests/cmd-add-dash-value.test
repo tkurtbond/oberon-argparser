@@ -1,0 +1,8 @@
+# a bare dash as a command option's value
+program Commands
+arg add
+arg -n
+arg -
+status 0
+output
+add: DoAddName called with "-"

@@ -1,0 +1,19 @@
+# -h prints usage and exits normally
+program Simple
+arg -h
+status 0
+output
+This is output from parsing the command line in SIMPLE.
+
+simple [options] arguments...
+
+  -h, --help
+      Display help message and exit.
+  -s, --string <arg>
+      Call callback on string argument.
+  -i, --integer <arg>
+      Call callback on integer argument.
+  -a
+      Option with short name only.
+  --long-name
+      Option with long name only.

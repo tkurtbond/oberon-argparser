@@ -1,0 +1,10 @@
+# a negative number as the next word
+program Simple
+arg -ai
+arg -5
+status 0
+output
+This is output from parsing the command line in SIMPLE.
+
+DoShortNameOnly called.
+DoInteger called with integer: -5

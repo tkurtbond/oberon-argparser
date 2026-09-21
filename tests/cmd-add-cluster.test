@@ -1,0 +1,7 @@
+# a cluster in a command
+program Commands
+arg add
+arg -nbob
+status 0
+output
+add: DoAddName called with "bob"

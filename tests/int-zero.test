@@ -1,0 +1,9 @@
+# zero
+program Simple
+arg -i
+arg 0
+status 0
+output
+This is output from parsing the command line in SIMPLE.
+
+DoInteger called with integer: 0

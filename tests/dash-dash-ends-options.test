@@ -1,0 +1,13 @@
+# everything after -- is an argument
+program Simple
+arg --
+arg -a
+arg -
+arg -x
+status 0
+output
+This is output from parsing the command line in SIMPLE.
+
+ArgHandler called at index 2 with argument: "-a"
+ArgHandler called at index 3 with argument: "-"
+ArgHandler called at index 4 with argument: "-x"

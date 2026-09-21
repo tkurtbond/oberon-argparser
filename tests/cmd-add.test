@@ -1,0 +1,14 @@
+# a command with its own options and arguments
+program Commands
+arg -v
+arg add
+arg -n
+arg bob
+arg item1
+arg item2
+status 0
+output
+DoVerbose called.
+add: DoAddName called with "bob"
+add: ArgHandler called at index 5 with argument: "item1"
+add: ArgHandler called at index 6 with argument: "item2"

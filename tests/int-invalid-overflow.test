@@ -1,0 +1,22 @@
+# a number too big for LONGINT
+program Simple
+arg -i
+arg 99999999999999999999
+status 1
+output
+This is output from parsing the command line in SIMPLE.
+
+Error: Invalid integer value for option: 99999999999999999999
+simple [options] arguments...
+
+  -h, --help
+      Display help message and exit.
+  -s, --string <arg>
+      Call callback on string argument.
+  -i, --integer <arg>
+      Call callback on integer argument.
+  -a
+      Option with short name only.
+  --long-name
+      Option with long name only.
+Terminated by Halt(1). 

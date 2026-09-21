@@ -1,0 +1,9 @@
+# -aa runs the option twice
+program Simple
+arg -aa
+status 0
+output
+This is output from parsing the command line in SIMPLE.
+
+DoShortNameOnly called.
+DoShortNameOnly called.

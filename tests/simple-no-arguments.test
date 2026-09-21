@@ -1,0 +1,5 @@
+# no arguments at all
+program Simple
+status 0
+output
+This is output from parsing the command line in SIMPLE.

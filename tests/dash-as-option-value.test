@@ -1,0 +1,9 @@
+# a bare dash as an option's value
+program Simple
+arg -s
+arg -
+status 0
+output
+This is output from parsing the command line in SIMPLE.
+
+DoString called with "-"

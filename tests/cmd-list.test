@@ -1,0 +1,10 @@
+# a second command with an integer option
+program Commands
+arg list
+arg -c
+arg 7
+arg pat1
+status 0
+output
+list: DoListCount called with integer: 7
+list: ArgHandler called at index 4 with argument: "pat1"

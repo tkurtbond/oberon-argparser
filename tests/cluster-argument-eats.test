@@ -1,0 +1,22 @@
+# the rest of the cluster is the argument
+program Simple
+arg -ais
+status 1
+output
+This is output from parsing the command line in SIMPLE.
+
+DoShortNameOnly called.
+Error: Invalid integer value for option: s
+simple [options] arguments...
+
+  -h, --help
+      Display help message and exit.
+  -s, --string <arg>
+      Call callback on string argument.
+  -i, --integer <arg>
+      Call callback on integer argument.
+  -a
+      Option with short name only.
+  --long-name
+      Option with long name only.
+Terminated by Halt(1). 

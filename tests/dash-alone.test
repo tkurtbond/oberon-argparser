@@ -1,0 +1,8 @@
+# a bare dash is an ordinary argument
+program Simple
+arg -
+status 0
+output
+This is output from parsing the command line in SIMPLE.
+
+ArgHandler called at index 1 with argument: "-"

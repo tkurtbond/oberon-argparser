@@ -1,0 +1,9 @@
+# an option argument attached to the cluster
+program Simple
+arg -ai5
+status 0
+output
+This is output from parsing the command line in SIMPLE.
+
+DoShortNameOnly called.
+DoInteger called with integer: 5

@@ -1,0 +1,9 @@
+# a string argument attached to the cluster
+program Simple
+arg -asfoo
+status 0
+output
+This is output from parsing the command line in SIMPLE.
+
+DoShortNameOnly called.
+DoString called with "foo"

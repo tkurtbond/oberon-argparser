@@ -1,0 +1,22 @@
+# every kind of option and the argument handler
+program Simple
+arg -i
+arg 5
+arg --string
+arg foo
+arg -a
+arg --long-name
+arg x
+arg y
+arg z
+status 0
+output
+This is output from parsing the command line in SIMPLE.
+
+DoInteger called with integer: 5
+DoString called with "foo"
+DoShortNameOnly called.
+DoLongNameOnly called.
+ArgHandler called at index 7 with argument: "x"
+ArgHandler called at index 8 with argument: "y"
+ArgHandler called at index 9 with argument: "z"

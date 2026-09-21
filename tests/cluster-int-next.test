@@ -1,0 +1,12 @@
+# an option argument in the next word
+program Simple
+arg -ai
+arg 7
+arg x
+status 0
+output
+This is output from parsing the command line in SIMPLE.
+
+DoShortNameOnly called.
+DoInteger called with integer: 7
+ArgHandler called at index 3 with argument: "x"

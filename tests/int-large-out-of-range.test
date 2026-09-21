@@ -1,0 +1,22 @@
+# a valid LONGINT that is out of range
+program Simple
+arg -i
+arg 2147483647
+status 1
+output
+This is output from parsing the command line in SIMPLE.
+
+Error: Value out of range for option.
+simple [options] arguments...
+
+  -h, --help
+      Display help message and exit.
+  -s, --string <arg>
+      Call callback on string argument.
+  -i, --integer <arg>
+      Call callback on integer argument.
+  -a
+      Option with short name only.
+  --long-name
+      Option with long name only.
+Terminated by Halt(1). 
