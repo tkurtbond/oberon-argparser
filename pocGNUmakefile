@@ -1,0 +1,59 @@
+# Build the example programs with poc, the Peaseblossom Oberon Compiler:
+#
+#   make -f pocGNUmakefile
+#
+# The programs are built into poc-build/, not here, because poc writes its
+# symbol files (Module.sym, in text) and Module.ll into the directory it
+# runs in.  There they overwrite voc's symbol files, and voc then ignores
+# them ("warning 306 inappropriate symbol file ignored") until they are
+# rebuilt.  The sources are symlinked into poc-build/ so nothing poc writes
+# lands next to them.
+#
+# poc has no Args module (see poc-rtl/Args.Mod, a shim over poc's Modules).
+#
+# This needs a poc whose ModuleInterface.PrintStructural writes "()" for a
+# procedure type with no parameters but a result, like ArgParser's
+# OptionHandler.  Older ones write ArgParser.sym as "PROCEDURE: BOOLEAN",
+# cannot read it back, and every program that imports ArgParser fails with
+# "malformed module interface file" and a run of "not an imported module"
+# errors.  POC_DIR (or POC) selects another poc.
+
+POC_DIR ?= $(HOME)/Repos/Oberon/Peaseblossom
+POC ?= $(POC_DIR)/build/bin/poc
+
+BUILDDIR = poc-build
+PROGRAMS = Simple Commands
+
+# The rtl (Out, Strings, Modules, ...), the Args shim, and poc-build itself
+# (for ArgParser); "." is relative to the directory poc runs in.
+POC_IMPORT_PATH = $(POC_DIR)/rtl/llvm:$(CURDIR)/poc-rtl:.
+export POC_IMPORT_PATH
+
+.PHONY: all clean test-poc test-verbose
+
+# Keep the symlinks to the sources instead of deleting them as intermediates.
+.SECONDARY:
+
+all: $(addprefix $(BUILDDIR)/,$(PROGRAMS))
+
+$(BUILDDIR):
+	mkdir -p $@
+
+$(BUILDDIR)/%.Mod: %.Mod | $(BUILDDIR)
+	ln -sf ../$< $@
+
+# Every program imports ArgParser and, through it, Args.  poc reuses the
+# symbol files it finds, so clear them out to be sure they match the sources.
+$(BUILDDIR)/%: $(BUILDDIR)/%.Mod $(BUILDDIR)/ArgParser.Mod poc-rtl/Args.Mod
+	cd $(BUILDDIR) && rm -f *.sym *.ll && $(POC) -o $* -build $*.Mod
+
+# Run the fixtures in tests/ against the poc-built programs and report how
+# many passed and failed; test-verbose announces each test as it goes.
+test-poc: all
+	BINDIR=$(BUILDDIR) ./tests/run-tests.sh
+
+test-verbose: all
+	BINDIR=$(BUILDDIR) ./tests/run-tests.sh -v
+
+clean:
+	-rm -rfv $(BUILDDIR)
