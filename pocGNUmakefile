@@ -10,6 +10,10 @@
 # lands next to them.
 #
 # poc has no Args module (see poc-rtl/Args.Mod, a shim over poc's Modules).
+# OModPath also uses Err, to write to standard error, and FileTest, to see
+# if a file exists, which poc does not have either (see poc-rtl/Err.Mod and
+# poc-rtl/FileTest.Mod; voc builds use Err.Mod and FileTest.Mod in this
+# directory).
 #
 # This needs a poc whose ModuleInterface.PrintStructural writes "()" for a
 # procedure type with no parameters but a result, like ArgParser's
@@ -22,7 +26,7 @@ POC_DIR ?= $(HOME)/Repos/Oberon/Peaseblossom
 POC ?= $(POC_DIR)/build/bin/poc
 
 BUILDDIR = poc-build
-PROGRAMS = Simple Commands OneName
+PROGRAMS = Simple Commands OneName OModPath
 
 # The rtl (Out, Strings, Modules, ...), the Args shim, and poc-build itself
 # (for ArgParser); "." is relative to the directory poc runs in.
@@ -44,7 +48,7 @@ $(BUILDDIR)/%.Mod: %.Mod | $(BUILDDIR)
 
 # Every program imports ArgParser and, through it, Args.  poc reuses the
 # symbol files it finds, so clear them out to be sure they match the sources.
-$(BUILDDIR)/%: $(BUILDDIR)/%.Mod $(BUILDDIR)/ArgParser.Mod poc-rtl/Args.Mod
+$(BUILDDIR)/%: $(BUILDDIR)/%.Mod $(BUILDDIR)/ArgParser.Mod poc-rtl/Args.Mod poc-rtl/Err.Mod poc-rtl/FileTest.Mod
 	cd $(BUILDDIR) && rm -f *.sym *.ll && $(POC) -o $* -build $*.Mod
 
 # Run the fixtures in tests/ against the poc-built programs and report how
