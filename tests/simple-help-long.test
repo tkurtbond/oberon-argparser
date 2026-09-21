@@ -9,9 +9,9 @@ simple [options] arguments...
 
   -h, --help
       Display help message and exit.
-  -s, --string <arg>
+  -s <arg>, --string <arg>
       Call callback on string argument.
-  -i, --integer <arg>
+  -i <arg>, --integer <arg>
       Call callback on integer argument.
   -a
       Option with short name only.

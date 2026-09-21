@@ -12,10 +12,10 @@ commands [options] [command [options]] arguments...
 
 add [options] items...  Add items.
 
-  -n, --name <arg>
+  -n <arg>, --name <arg>
       Call callback on name argument.
 
 list [options] patterns...  List items.
 
-  -c, --count <arg>
+  -c <arg>, --count <arg>
       Call callback on count argument.
