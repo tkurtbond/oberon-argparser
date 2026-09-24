@@ -1,7 +1,7 @@
 # an out of range integer for an option with only a long name
 program OneName
 arg --number=11
-status 1
+status 2
 output
 Error: Value out of range for option --number.
 onename [options]

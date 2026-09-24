@@ -1,7 +1,7 @@
 # a long option that needs an argument, at the end
 program Simple
 arg --integer
-status 1
+status 2
 output
 This is output from parsing the command line in SIMPLE.
 

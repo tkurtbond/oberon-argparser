@@ -1,7 +1,7 @@
 # invalid value in --integer=VALUE form
 program Simple
 arg --integer=5x
-status 1
+status 2
 output
 This is output from parsing the command line in SIMPLE.
 

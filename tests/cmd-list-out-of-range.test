@@ -3,7 +3,7 @@ program Commands
 arg list
 arg -c
 arg 500
-status 1
+status 2
 output
 Error: Value out of range for option -c, --count.
 list [options] patterns...  List items.

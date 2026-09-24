@@ -1,7 +1,7 @@
 # options before an unknown one still run
 program Simple
 arg -ax
-status 1
+status 2
 output
 This is output from parsing the command line in SIMPLE.
 

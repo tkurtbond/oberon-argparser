@@ -1,7 +1,7 @@
 # a string option with only a long name, missing its argument
 program OneName
 arg --text
-status 1
+status 2
 output
 Error: Argument required for option --text
 onename [options]

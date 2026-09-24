@@ -1,7 +1,7 @@
 # a string option with only a short name, missing its argument
 program OneName
 arg -t
-status 1
+status 2
 output
 Error: Argument required for option -t
 onename [options]

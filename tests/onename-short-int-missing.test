@@ -1,7 +1,7 @@
 # an integer option with only a short name, missing its argument
 program OneName
 arg -n
-status 1
+status 2
 output
 Error: Argument required for option -n
 onename [options]

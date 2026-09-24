@@ -2,7 +2,7 @@
 program Simple
 arg -i
 arg 12x
-status 1
+status 2
 output
 This is output from parsing the command line in SIMPLE.
 

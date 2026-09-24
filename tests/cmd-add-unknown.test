@@ -2,7 +2,7 @@
 program Commands
 arg add
 arg --bogus
-status 1
+status 2
 output
 Error: Unknown option --bogus
 add [options] items...  Add items.

@@ -12,6 +12,11 @@ CONST
      that cannot allow that should check the length of its arguments. *)
   MaxStringLength* = 4095;
 
+  (* The exit status for a mistake on the command line, such as an unknown
+     option or a missing argument, as getopt and OCaml's Arg use; a
+     program's other errors can then use 1. *)
+  UsageErrorStatus* = 2;
+
 TYPE
   String* = ARRAY MaxStringLength + 1 OF CHAR;
 
@@ -256,13 +261,13 @@ BEGIN
       Out.String("Error: Invalid integer value for option ");
       WriteOptionNames(opt); Out.String(": "); Out.String(arg); Out.Ln;
       ErrorUsage(p);
-      HALT(1)
+      HALT(UsageErrorStatus)
     END;
     IF (val < opt.minInt) OR (val > opt.maxInt) THEN
       Out.String("Error: Value out of range for option ");
       WriteOptionNames(opt); Out.Char("."); Out.Ln;
       ErrorUsage(p);
-      HALT(1)
+      HALT(UsageErrorStatus)
     END;
     IF opt.intHandler # NIL THEN RETURN opt.intHandler(val) END;
   END;
@@ -373,7 +378,7 @@ BEGIN
               Out.String("Error: Argument required for option ");
               WriteOptionNames(opt); Out.Ln;
               ErrorUsage(p);
-              HALT(1)
+              HALT(UsageErrorStatus)
             END
           ELSE
             cont := DispatchOption(p, opt, emptyArg)
@@ -381,7 +386,7 @@ BEGIN
         ELSE
           Out.String("Error: Unknown option --"); Out.String(optName); Out.Ln;
           ErrorUsage(p);
-          HALT(1)
+          HALT(UsageErrorStatus)
         END
       ELSE
         (* Handle Short Options, possibly clustered, as in -abc.  An option
@@ -394,7 +399,7 @@ BEGIN
           IF opt = NIL THEN
             Out.String("Error: Unknown option -"); Out.Char(arg[ci]); Out.Ln;
             ErrorUsage(p);
-            HALT(1)
+            HALT(UsageErrorStatus)
           ELSIF opt.argRequired THEN
             IF arg[ci + 1] # 0X THEN
               k := 0; INC(ci);
@@ -410,7 +415,7 @@ BEGIN
               Out.String("Error: Argument required for option ");
               WriteOptionNames(opt); Out.Ln;
               ErrorUsage(p);
-              HALT(1)
+              HALT(UsageErrorStatus)
             END
           ELSE
             cont := DispatchOption(p, opt, emptyArg);

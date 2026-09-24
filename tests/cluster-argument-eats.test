@@ -1,7 +1,7 @@
 # the rest of the cluster is the argument
 program Simple
 arg -ais
-status 1
+status 2
 output
 This is output from parsing the command line in SIMPLE.
 

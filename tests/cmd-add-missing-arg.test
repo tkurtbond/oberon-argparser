@@ -2,7 +2,7 @@
 program Commands
 arg add
 arg --name
-status 1
+status 2
 output
 Error: Argument required for option -n, --name
 add [options] items...  Add items.

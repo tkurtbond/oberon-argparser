@@ -1,7 +1,7 @@
 # an unknown long option
 program Simple
 arg --bogus
-status 1
+status 2
 output
 This is output from parsing the command line in SIMPLE.
 

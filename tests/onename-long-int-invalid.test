@@ -2,7 +2,7 @@
 program OneName
 arg --number
 arg abc
-status 1
+status 2
 output
 Error: Invalid integer value for option --number: abc
 onename [options]

@@ -2,7 +2,7 @@
 program OneName
 arg -n
 arg 11
-status 1
+status 2
 output
 Error: Value out of range for option -n.
 onename [options]

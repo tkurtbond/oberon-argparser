@@ -3,7 +3,7 @@ program Commands
 arg list
 arg -c
 arg abc
-status 1
+status 2
 output
 Error: Invalid integer value for option -c, --count: abc
 list [options] patterns...  List items.

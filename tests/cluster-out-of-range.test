@@ -2,7 +2,7 @@
 program Simple
 arg -ai
 arg 500
-status 1
+status 2
 output
 This is output from parsing the command line in SIMPLE.
 

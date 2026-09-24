@@ -1,7 +1,7 @@
 # out of range value in --integer=VALUE form
 program Simple
 arg --integer=500
-status 1
+status 2
 output
 This is output from parsing the command line in SIMPLE.
 
