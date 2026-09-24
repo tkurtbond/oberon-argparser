@@ -17,6 +17,7 @@ It moved here, with its history, from
 make                 # build the example programs with voc
 make test            # build, then run the fixtures in tests/
 make install         # copy ArgParser.Mod to OBERON_MODULES
+make uninstall       # remove it from OBERON_MODULES
 make -f pocGNUmakefile test-poc   # build and test with poc instead
 ```
 

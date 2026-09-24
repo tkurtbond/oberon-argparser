@@ -11,7 +11,7 @@ MODULES = ArgParser.Mod
 
 PROGRAMS=Simple Commands OneName
 
-.PHONY: all clean test test-verbose install
+.PHONY: all clean test test-verbose install uninstall
 
 all: $(PROGRAMS)
 
@@ -40,6 +40,10 @@ test-verbose: all
 install: $(MODULES:.Mod=.o)
 	install -d $(INSTALLDIR)
 	install -m 644 $(MODULES) $(INSTALLDIR)
+
+# Remove what make install copied, and only that.
+uninstall:
+	rm -f $(addprefix $(INSTALLDIR)/,$(MODULES))
 
 clean:
 	-rm -fv $(PROGRAMS) *.c *.h *.o *.sym
