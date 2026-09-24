@@ -16,8 +16,8 @@ It moved here, with its history, from
 ```sh
 make                 # build the example programs with voc
 make test            # build, then run the fixtures in tests/
-make install         # copy ArgParser.Mod to OBERON_MODULES
-make uninstall       # remove it from OBERON_MODULES
+make install         # copy ArgParser.Mod and Err.Mod to OBERON_MODULES
+make uninstall       # remove them from OBERON_MODULES
 make -f pocGNUmakefile test-poc   # build and test with poc instead
 ```
 
@@ -26,3 +26,9 @@ it through `vpath` in `OBERON_MODULES`, a colon-separated list of
 directories, and voc builds it into their own build directories.
 `make install` copies it to the first directory in `OBERON_MODULES`
 (default `/usr/local/sw/versions/oberon/include`).
+
+`make install` also installs `Err.Mod`, which writes text to standard
+error with the interface of `Out` (`String`, `Char` and `Ln`). poc has
+no `Platform.Write`, so there is a poc version too, `poc-rtl/Err.Mod`;
+`make install` copies it to the `poc` subdirectory of that directory,
+for other repos' poc builds to put on poc's import path.

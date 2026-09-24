@@ -4,14 +4,16 @@ Working notes for an agent in this repo, which holds `ArgParser.Mod`,
 an Oberon-2 command-line parser built with voc (Vishap Oberon), and
 its example programs `Simple.Mod`, `Commands.Mod` and `OneName.Mod`.
 It moved here, with its history, from `~/Repos/Oberon/oberon-tools`.
+It also holds `Err.Mod`, text output to standard error, which moved
+here from oberon-tools so that it is installed with `ArgParser.Mod`.
 
 ## Build / test / install
 
 ```sh
 make                 # the example programs, with voc
 make test            # build, then run tests/*.test; ends "N ok, M failed"
-make install         # copy ArgParser.Mod to the first directory in OBERON_MODULES
-make uninstall       # remove it from there
+make install         # copy ArgParser.Mod and Err.Mod to the first directory in OBERON_MODULES
+make uninstall       # remove them from there
 make -f pocGNUmakefile test-poc   # build and test with poc instead
 tests/run-tests.sh -o cmd-add cluster-repeat   # selected fixtures, with their real output
 ```
@@ -19,19 +21,27 @@ tests/run-tests.sh -o cmd-add cluster-repeat   # selected fixtures, with their r
 - The `GNUmakefile` builds a library module with `voc -f -s` and a
   program with `voc -f -m`. A new program goes in `PROGRAMS` and in
   `.gitignore`.
-- **Other repos don't keep a copy of `ArgParser.Mod`.** Their makefiles
-  find it through `vpath` in `OBERON_MODULES`, a colon-separated list
+- **Other repos don't keep a copy of `ArgParser.Mod` or `Err.Mod`.**
+  Their makefiles find them through `vpath` in `OBERON_MODULES`, a colon-separated list
   of directories (default `/usr/local/sw/versions/oberon/include`),
   and voc builds it into their own build directories. Its users are
   `~/Repos/Oberon/oberon-tools` and `~/Repos/Oberon/Ropes`.
-- **After changing `ArgParser.Mod`, run `make test`, then
-  `make install`**, then rebuild and test the repos that use it.
-  `make install` compiles `ArgParser.Mod` first, so a module that
-  doesn't compile is never installed.
-- **`make uninstall` removes only `ArgParser.Mod`** from the first
-  directory in `OBERON_MODULES`, and succeeds if it is already gone.
-  Until you install it again, the repos that use it stop with
-  "ArgParser.Mod is not in OBERON_MODULES".
+- **After changing `ArgParser.Mod` or `Err.Mod`, run `make test`,
+  then `make install`**, then rebuild and test the repos that use
+  them. `make install` compiles the voc modules first, so a module
+  that doesn't compile is never installed.
+- **`Err` has a poc version, `poc-rtl/Err.Mod`**, with the same
+  interface, because poc has no `Platform.Write` for standard error.
+  `make install` copies it to the `poc` subdirectory of the first
+  directory in `OBERON_MODULES`, where oberon-tools' `pocGNUmakefile`
+  finds it. A change to one version needs the same change to the
+  other.
+- **`make uninstall` removes only what `make install` copied**:
+  `ArgParser.Mod` and `Err.Mod` from the first directory in
+  `OBERON_MODULES`, and `poc/Err.Mod`, and the `poc` directory if
+  that leaves it empty. It succeeds if they are already gone. Until
+  you install them again, the repos that use them stop with
+  "ArgParser.Mod is not in OBERON_MODULES" (or `Err.Mod`).
 - `pocGNUmakefile` builds the programs with poc into `poc-build/`. See
   its header for why the build goes there. poc has no `Args` module,
   so `poc-rtl/Args.Mod` is a shim over poc's `Modules`.
