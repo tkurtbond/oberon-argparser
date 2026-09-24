@@ -23,6 +23,9 @@ all: $(PROGRAMS) $(MODULES:.Mod=.o)
 # (built along with ArgParser.o) and are rebuilt when it changes.
 $(PROGRAMS): ArgParser.o
 
+# ArgParser writes its errors to standard error with Err.
+ArgParser.o: Err.o
+
 
 %: %.Mod
 	$(VOC) $(VOCFLAGS) $(VOCMAIN) $<

@@ -1,6 +1,6 @@
 MODULE ArgParser;
 
-IMPORT Args, Out, Platform, Strings;
+IMPORT Args, Err, Out, Platform, Strings;
 
 CONST
   NoArgOption* = 0;
@@ -61,6 +61,29 @@ TYPE
     commands*: Command;  (* NIL if no commands were defined. *)
     parent: Parser;      (* The parser this is a command of, or NIL. *)
   END;
+
+VAR
+  (* Where the usage and error messages go: standard output for the usage
+     a program asks for, as with --help, and standard error for an error
+     and the usage after it.  UseOut and UseErr set them. *)
+  WriteString: PROCEDURE (s: ARRAY OF CHAR);
+  WriteChar: PROCEDURE (ch: CHAR);
+  WriteLn: PROCEDURE;
+
+(* --- Output --- *)
+
+PROCEDURE UseOut;
+BEGIN
+  WriteString := Out.String; WriteChar := Out.Char; WriteLn := Out.Ln
+END UseOut;
+
+(* Out is flushed first, so that what the program has already written to
+   standard output comes before the error when both go to one place. *)
+PROCEDURE UseErr;
+BEGIN
+  Out.Flush;
+  WriteString := Err.String; WriteChar := Err.Char; WriteLn := Err.Ln
+END UseErr;
 
 (* --- Helper Constructors --- *)
 
@@ -163,58 +186,77 @@ PROCEDURE UsageOptions(p: Parser);
 VAR opt: Option;
 BEGIN
   IF p.description # "" THEN
-    Out.String(p.description); Out.Ln
+    WriteString(p.description); WriteLn
   END;
-  Out.Ln;
+  WriteLn;
   opt := p.options;
   WHILE opt # NIL DO
-    Out.String("  ");
+    WriteString("  ");
     IF opt.shortName # 0X THEN
-      Out.Char("-"); Out.Char(opt.shortName);
-      IF opt.argRequired THEN Out.String(" <arg>") END
+      WriteChar("-"); WriteChar(opt.shortName);
+      IF opt.argRequired THEN WriteString(" <arg>") END
     END;
-    IF (opt.shortName # 0X) & (opt.longName # "") THEN Out.String(", ") END;
+    IF (opt.shortName # 0X) & (opt.longName # "") THEN WriteString(", ") END;
     IF opt.longName # "" THEN
-      Out.String("--"); Out.String(opt.longName)
+      WriteString("--"); WriteString(opt.longName)
     END;
-    IF opt.argRequired & (opt.longName # "") THEN Out.String(" <arg>") END;
-    Out.Ln;
+    IF opt.argRequired & (opt.longName # "") THEN WriteString(" <arg>") END;
+    WriteLn;
     IF opt.description # "" THEN
-      Out.String("      "); Out.String(opt.description); Out.Ln
+      WriteString("      "); WriteString(opt.description); WriteLn
     END;
     opt := opt.next
   END
 END UsageOptions;
 
-PROCEDURE (p: Parser) Usage*;
+(* Show the usage of p and its commands with the Write procedures. *)
+PROCEDURE WriteUsage(p: Parser);
 VAR cmd: Command;
 BEGIN
   UsageOptions(p);
   cmd := p.commands;
   WHILE cmd # NIL DO
-    Out.Ln;
-    cmd.parser.Usage;
+    WriteLn;
+    WriteUsage(cmd.parser);
     cmd := cmd.next
   END
+END WriteUsage;
+
+(* Show the usage on standard output, as for --help. *)
+PROCEDURE (p: Parser) Usage*;
+BEGIN
+  UseOut;
+  WriteUsage(p)
 END Usage;
 
-(* After an error, show the usage of the parser that found it and, if it
-   is a command, the full usage of the main parser above it. *)
+(* Start an error message on standard error.  ErrorUsage and
+   UsageErrorExit finish it. *)
+PROCEDURE ErrorStart;
+BEGIN
+  UseErr;
+  WriteString("Error: ")
+END ErrorStart;
+
+(* After an error, show on standard error the usage of the parser that
+   found it and, if it is a command, the full usage of the main parser
+   above it. *)
 PROCEDURE ErrorUsage(p: Parser);
 VAR main: Parser;
 BEGIN
-  p.Usage;
+  WriteUsage(p);
   main := p;
   WHILE main.parent # NIL DO main := main.parent END;
   IF main # p THEN
-    Out.Ln;
-    main.Usage
+    WriteLn;
+    WriteUsage(main)
   END
 END ErrorUsage;
 
 (* End the program with UsageErrorStatus.  Platform.Exit is used rather
    than HALT, which in voc writes "Terminated by Halt(N)." to standard
-   output; Out is flushed first because voc's Platform.Exit does not. *)
+   output.  Err is not buffered, but Out is flushed, because voc's
+   Platform.Exit does not flush it, in case something wrote to it after
+   UseErr. *)
 PROCEDURE UsageErrorExit;
 BEGIN
   Out.Flush;
@@ -251,9 +293,9 @@ END StrToInt;
 (* Show the names of an option, as in the usage: -i, --integer. *)
 PROCEDURE WriteOptionNames(opt: Option);
 BEGIN
-  IF opt.shortName # 0X THEN Out.Char("-"); Out.Char(opt.shortName) END;
-  IF (opt.shortName # 0X) & (opt.longName # "") THEN Out.String(", ") END;
-  IF opt.longName # "" THEN Out.String("--"); Out.String(opt.longName) END
+  IF opt.shortName # 0X THEN WriteChar("-"); WriteChar(opt.shortName) END;
+  IF (opt.shortName # 0X) & (opt.longName # "") THEN WriteString(", ") END;
+  IF opt.longName # "" THEN WriteString("--"); WriteString(opt.longName) END
 END WriteOptionNames;
 
 PROCEDURE DispatchOption(p: Parser; opt: Option; VAR arg: ARRAY OF CHAR): BOOLEAN;
@@ -267,14 +309,14 @@ BEGIN
     IF opt.stringHandler # NIL THEN RETURN opt.stringHandler(arg) END;
   ELSIF opt.kind = IntOption THEN
     IF ~StrToInt(arg, val) THEN
-      Out.String("Error: Invalid integer value for option ");
-      WriteOptionNames(opt); Out.String(": "); Out.String(arg); Out.Ln;
+      ErrorStart; WriteString("Invalid integer value for option ");
+      WriteOptionNames(opt); WriteString(": "); WriteString(arg); WriteLn;
       ErrorUsage(p);
       UsageErrorExit
     END;
     IF (val < opt.minInt) OR (val > opt.maxInt) THEN
-      Out.String("Error: Value out of range for option ");
-      WriteOptionNames(opt); Out.Char("."); Out.Ln;
+      ErrorStart; WriteString("Value out of range for option ");
+      WriteOptionNames(opt); WriteChar("."); WriteLn;
       ErrorUsage(p);
       UsageErrorExit
     END;
@@ -384,8 +426,8 @@ BEGIN
               Args.Get(i, optArg);
               cont := DispatchOption(p, opt, optArg)
             ELSE
-              Out.String("Error: Argument required for option ");
-              WriteOptionNames(opt); Out.Ln;
+              ErrorStart; WriteString("Argument required for option ");
+              WriteOptionNames(opt); WriteLn;
               ErrorUsage(p);
               UsageErrorExit
             END
@@ -393,7 +435,7 @@ BEGIN
             cont := DispatchOption(p, opt, emptyArg)
           END
         ELSE
-          Out.String("Error: Unknown option --"); Out.String(optName); Out.Ln;
+          ErrorStart; WriteString("Unknown option --"); WriteString(optName); WriteLn;
           ErrorUsage(p);
           UsageErrorExit
         END
@@ -406,7 +448,7 @@ BEGIN
         WHILE (arg[ci] # 0X) & cont DO
           opt := FindShortOption(p, arg[ci]);
           IF opt = NIL THEN
-            Out.String("Error: Unknown option -"); Out.Char(arg[ci]); Out.Ln;
+            ErrorStart; WriteString("Unknown option -"); WriteChar(arg[ci]); WriteLn;
             ErrorUsage(p);
             UsageErrorExit
           ELSIF opt.argRequired THEN
@@ -421,8 +463,8 @@ BEGIN
               INC(ci);
               cont := DispatchOption(p, opt, optArg)
             ELSE
-              Out.String("Error: Argument required for option ");
-              WriteOptionNames(opt); Out.Ln;
+              ErrorStart; WriteString("Argument required for option ");
+              WriteOptionNames(opt); WriteLn;
               ErrorUsage(p);
               UsageErrorExit
             END
@@ -437,4 +479,6 @@ BEGIN
   END
 END ParseArguments;
 
+BEGIN
+  UseOut
 END ArgParser.

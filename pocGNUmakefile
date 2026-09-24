@@ -42,9 +42,10 @@ $(BUILDDIR):
 $(BUILDDIR)/%.Mod: %.Mod | $(BUILDDIR)
 	ln -sf ../$< $@
 
-# Every program imports ArgParser and, through it, Args.  poc reuses the
-# symbol files it finds, so clear them out to be sure they match the sources.
-$(BUILDDIR)/%: $(BUILDDIR)/%.Mod $(BUILDDIR)/ArgParser.Mod poc-rtl/Args.Mod
+# Every program imports ArgParser and, through it, Args and Err.  poc
+# reuses the symbol files it finds, so clear them out to be sure they
+# match the sources.
+$(BUILDDIR)/%: $(BUILDDIR)/%.Mod $(BUILDDIR)/ArgParser.Mod poc-rtl/Args.Mod poc-rtl/Err.Mod
 	cd $(BUILDDIR) && rm -f *.sym *.ll && $(POC) -o $* -build $*.Mod
 
 # Run the fixtures in tests/ against the poc-built programs and report how

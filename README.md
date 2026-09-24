@@ -5,6 +5,11 @@ programs built with voc (Vishap Oberon): long and short options,
 clustered short options, integer and string option values, `--` to
 end options, and usage messages.
 
+A parser's `Usage` prints on standard output, for a program's `--help`.
+A mistake on the command line, such as an unknown option or a missing
+argument, prints an error and the usage on standard error, and exits
+with status 2 (`UsageErrorStatus`).
+
 `Simple.Mod`, `Commands.Mod` and `OneName.Mod` are example programs,
 and the fixtures in `tests/` test ArgParser through them.
 

@@ -49,8 +49,17 @@ tests/run-tests.sh -o cmd-add cluster-repeat   # selected fixtures, with their r
   (repeatable; a bare `arg` is an empty argument), optional `env`,
   `dir` and `input`, then `status`, and `output` followed by the
   expected text. Standard output and standard error are compared
-  mixed together. The harness ignores trailing white space and voc's
-  `Terminated by Halt(N).` lines.
+  mixed together, so a fixture doesn't show which one a line went
+  to; check that by running the program. The harness ignores
+  trailing white space and voc's `Terminated by Halt(N).` lines.
+- **`Usage` writes to standard output, and errors, with the usage
+  after them, to standard error.** Every piece of usage and error
+  text goes through the `WriteString`, `WriteChar` and `WriteLn`
+  procedure variables, which `UseOut` points at `Out` and `UseErr`
+  at `Err`. `UseErr` flushes `Out` first, so a program's earlier
+  output still comes first. A mistake on the command line exits with
+  `UsageErrorStatus` (2) through `Platform.Exit`, not `HALT`, which
+  in voc writes `Terminated by Halt(N).`.
 - **Regenerate fixtures from real runs; never hand-edit one that
   embeds generated text.** 31 fixtures embed a program's usage text
   (help, and most errors, print it), so a change to `Usage` or to an
