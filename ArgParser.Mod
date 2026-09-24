@@ -1,6 +1,6 @@
 MODULE ArgParser;
 
-IMPORT Args, Out, Strings;
+IMPORT Args, Out, Platform, Strings;
 
 CONST
   NoArgOption* = 0;
@@ -212,6 +212,15 @@ BEGIN
   END
 END ErrorUsage;
 
+(* End the program with UsageErrorStatus.  Platform.Exit is used rather
+   than HALT, which in voc writes "Terminated by Halt(N)." to standard
+   output; Out is flushed first because voc's Platform.Exit does not. *)
+PROCEDURE UsageErrorExit;
+BEGIN
+  Out.Flush;
+  Platform.Exit(UsageErrorStatus)
+END UsageErrorExit;
+
 (* Convert s, an optionally signed decimal integer with optional leading
    blanks, to val.  Returns FALSE, with val set to 0, if s is not exactly
    such a number or if the number is too large for a LONGINT. *)
@@ -261,13 +270,13 @@ BEGIN
       Out.String("Error: Invalid integer value for option ");
       WriteOptionNames(opt); Out.String(": "); Out.String(arg); Out.Ln;
       ErrorUsage(p);
-      HALT(UsageErrorStatus)
+      UsageErrorExit
     END;
     IF (val < opt.minInt) OR (val > opt.maxInt) THEN
       Out.String("Error: Value out of range for option ");
       WriteOptionNames(opt); Out.Char("."); Out.Ln;
       ErrorUsage(p);
-      HALT(UsageErrorStatus)
+      UsageErrorExit
     END;
     IF opt.intHandler # NIL THEN RETURN opt.intHandler(val) END;
   END;
@@ -378,7 +387,7 @@ BEGIN
               Out.String("Error: Argument required for option ");
               WriteOptionNames(opt); Out.Ln;
               ErrorUsage(p);
-              HALT(UsageErrorStatus)
+              UsageErrorExit
             END
           ELSE
             cont := DispatchOption(p, opt, emptyArg)
@@ -386,7 +395,7 @@ BEGIN
         ELSE
           Out.String("Error: Unknown option --"); Out.String(optName); Out.Ln;
           ErrorUsage(p);
-          HALT(UsageErrorStatus)
+          UsageErrorExit
         END
       ELSE
         (* Handle Short Options, possibly clustered, as in -abc.  An option
@@ -399,7 +408,7 @@ BEGIN
           IF opt = NIL THEN
             Out.String("Error: Unknown option -"); Out.Char(arg[ci]); Out.Ln;
             ErrorUsage(p);
-            HALT(UsageErrorStatus)
+            UsageErrorExit
           ELSIF opt.argRequired THEN
             IF arg[ci + 1] # 0X THEN
               k := 0; INC(ci);
@@ -415,7 +424,7 @@ BEGIN
               Out.String("Error: Argument required for option ");
               WriteOptionNames(opt); Out.Ln;
               ErrorUsage(p);
-              HALT(UsageErrorStatus)
+              UsageErrorExit
             END
           ELSE
             cont := DispatchOption(p, opt, emptyArg);
