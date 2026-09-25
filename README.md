@@ -1,5 +1,7 @@
 # ArgParser: command-line parsing for Oberon-2
 
+The software in this repo is developed with the aid of AI.
+
 `ArgParser.Mod` parses command-line options and commands for Oberon-2
 programs built with voc (Vishap Oberon): long and short options,
 clustered short options, integer and string option values, `--` to
