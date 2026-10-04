@@ -30,21 +30,18 @@ tests/run-tests.sh -o cmd-add cluster-repeat   # selected fixtures, with their r
   then `make install`**, then rebuild and test the repos that use
   them. `make install` compiles the voc modules first, so a module
   that doesn't compile is never installed.
-- **`Err` has a poc version, `poc-rtl/Err.Mod`**, with the same
-  interface, because poc has no `Platform.Write` for standard error.
-  `make install` copies it to the `poc` subdirectory of the first
-  directory in `OBERON_MODULES`, where oberon-tools' `pocGNUmakefile`
-  finds it. A change to one version needs the same change to the
-  other.
+- **`Err.Mod` is for voc builds only**: poc's runtime library,
+  poc-rtl, has its own `Err` (and `Args`), with the same `String`,
+  `Char` and `Ln`, unbuffered, and poc takes a library module before
+  any source of that name.
 - **`make uninstall` removes only what `make install` copied**:
   `ArgParser.Mod` and `Err.Mod` from the first directory in
-  `OBERON_MODULES`, and `poc/Err.Mod`, and the `poc` directory if
-  that leaves it empty. It succeeds if they are already gone. Until
+  `OBERON_MODULES`. It succeeds if they are already gone. Until
   you install them again, the repos that use them stop with
   "ArgParser.Mod is not in OBERON_MODULES" (or `Err.Mod`).
-- `pocGNUmakefile` builds the programs with poc into `poc-build/`. See
-  its header for why the build goes there. poc has no `Args` module,
-  so `poc-rtl/Args.Mod` is a shim over poc's `Modules`.
+- `pocGNUmakefile` builds the programs with the installed poc (`POC`
+  for another) in `poc-build/`, where the sources are symlinked. See
+  its header for why the build goes there.
 - **Fixtures**: `tests/NAME.test` has the lines `program`, `arg`
   (repeatable; a bare `arg` is an empty argument), optional `env`,
   `dir` and `input`, then `status`, and `output` followed by the

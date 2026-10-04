@@ -1,33 +1,27 @@
-# Build the example programs with poc, the Peaseblossom Oberon Compiler:
+# Build the example programs with poc, the Peaseblossom Oberon Compiler, as
+# installed (poc on PATH, with its runtime library poc-rtl):
 #
 #   make -f pocGNUmakefile
 #
-# The programs are built into poc-build/, not here, because poc writes its
-# symbol files (Module.sym, in text) and Module.ll into the directory it
-# runs in.  There they overwrite voc's symbol files, and voc then ignores
-# them ("warning 306 inappropriate symbol file ignored") until they are
-# rebuilt.  The sources are symlinked into poc-build/ so nothing poc writes
-# lands next to them.
+# poc builds in poc-build/, where the sources it needs are symlinked, for
+# two reasons. What it writes - each module's .sym (in text), .ll and .o,
+# and the programs - lands there and not next to the sources, where it
+# would overwrite voc's symbol files (voc then ignores them, "warning 306
+# inappropriate symbol file ignored", until they are rebuilt). And poc does
+# not see what voc leaves here: it compiles a Module.c beside Module.Mod as
+# the module's part in C, which voc's generated ArgParser.c is not.
 #
-# poc has no Args module (see poc-rtl/Args.Mod, a shim over poc's Modules).
+# Args and Err come from poc-rtl, so Err.Mod here (the voc version) is not
+# linked into poc-build/.
 #
-# This needs a poc whose ModuleInterface.PrintStructural writes "()" for a
-# procedure type with no parameters but a result, like ArgParser's
-# OptionHandler.  Older ones write ArgParser.sym as "PROCEDURE: BOOLEAN",
-# cannot read it back, and every program that imports ArgParser fails with
-# "malformed module interface file" and a run of "not an imported module"
-# errors.  POC_DIR (or POC) selects another poc.
+# POC selects another poc, by an absolute path, since it runs in poc-build:
+#
+#   make -f pocGNUmakefile POC=$HOME/Repos/Oberon/Peaseblossom/build/bin/poc
 
-POC_DIR ?= $(HOME)/Repos/Oberon/Peaseblossom
-POC ?= $(POC_DIR)/build/bin/poc
+POC ?= poc
 
 BUILDDIR = poc-build
 PROGRAMS = Simple Commands OneName
-
-# The rtl (Out, Strings, Modules, ...), the Args shim, and poc-build itself
-# (for ArgParser); "." is relative to the directory poc runs in.
-POC_IMPORT_PATH = $(POC_DIR)/rtl/llvm:$(CURDIR)/poc-rtl:.
-export POC_IMPORT_PATH
 
 .PHONY: all clean test-poc test-verbose
 
@@ -42,11 +36,9 @@ $(BUILDDIR):
 $(BUILDDIR)/%.Mod: %.Mod | $(BUILDDIR)
 	ln -sf ../$< $@
 
-# Every program imports ArgParser and, through it, Args and Err.  poc
-# reuses the symbol files it finds, so clear them out to be sure they
-# match the sources.
-$(BUILDDIR)/%: $(BUILDDIR)/%.Mod $(BUILDDIR)/ArgParser.Mod poc-rtl/Args.Mod poc-rtl/Err.Mod
-	cd $(BUILDDIR) && rm -f *.sym *.ll && $(POC) -o $* -build $*.Mod
+# poc compiles every module of a program from its source on every build.
+$(BUILDDIR)/%: $(BUILDDIR)/%.Mod $(BUILDDIR)/ArgParser.Mod
+	cd $(BUILDDIR) && $(POC) -o $* $*.Mod
 
 # Run the fixtures in tests/ against the poc-built programs and report how
 # many passed and failed; test-verbose announces each test as it goes.

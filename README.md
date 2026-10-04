@@ -35,7 +35,6 @@ directories, and voc builds it into their own build directories.
 (default `/usr/local/sw/versions/oberon/include`).
 
 `make install` also installs `Err.Mod`, which writes text to standard
-error with the interface of `Out` (`String`, `Char` and `Ln`). poc has
-no `Platform.Write`, so there is a poc version too, `poc-rtl/Err.Mod`;
-`make install` copies it to the `poc` subdirectory of that directory,
-for other repos' poc builds to put on poc's import path.
+error with the interface of `Out` (`String`, `Char` and `Ln`), for voc
+builds. poc's runtime library has its own `Err` and `Args`, which poc
+builds use instead.

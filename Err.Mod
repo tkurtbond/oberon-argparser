@@ -4,10 +4,9 @@ MODULE Err;
    and Ln), for programs that write diagnostics apart from their output.
    Nothing is buffered.
 
-   This is the voc version, over voc's Platform.  poc has no Platform.Write,
-   so there is a poc version, with the same interface, in poc-rtl/Err.Mod.
-   make install copies this one to OBERON_MODULES, with ArgParser.Mod, and
-   the poc one to its poc subdirectory, for other repos' poc builds. *)
+   This is for voc builds, over voc's Platform; make install copies it to
+   OBERON_MODULES, with ArgParser.Mod.  poc builds use the Err of poc's
+   runtime library, which has the same procedures. *)
 
 IMPORT SYSTEM, Platform;
 

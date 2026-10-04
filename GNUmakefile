@@ -4,14 +4,11 @@ VOCMAIN=-m
 
 # make install copies the shared modules to the first directory in
 # OBERON_MODULES (a colon-separated list), where other repos' makefiles
-# find them.  Err, which writes to standard error, has a poc version too,
-# in poc-rtl, since poc has no Platform.Write; it goes in the poc
-# subdirectory, for other repos' poc builds to put on poc's import path.
+# find them.  Err is for voc builds: poc has its own, in its runtime
+# library.
 OBERON_MODULES ?= /usr/local/sw/versions/oberon/include
 INSTALLDIR = $(firstword $(subst :, ,$(OBERON_MODULES)))
 MODULES = ArgParser.Mod Err.Mod
-POC_MODULES = poc-rtl/Err.Mod
-POC_INSTALLDIR = $(INSTALLDIR)/poc
 
 PROGRAMS=Simple Commands OneName
 
@@ -43,19 +40,14 @@ test: all
 test-verbose: all
 	./tests/run-tests.sh -v
 
-# Install only a module that compiles.  (The poc versions are compiled by
-# make -f pocGNUmakefile, not here.)
+# Install only a module that compiles.
 install: $(MODULES:.Mod=.o)
-	install -d $(INSTALLDIR) $(POC_INSTALLDIR)
+	install -d $(INSTALLDIR)
 	install -m 644 $(MODULES) $(INSTALLDIR)
-	install -m 644 $(POC_MODULES) $(POC_INSTALLDIR)
 
-# Remove what make install copied, and only that.  The poc subdirectory is
-# removed only if nothing else is left in it.
+# Remove what make install copied, and only that.
 uninstall:
 	rm -f $(addprefix $(INSTALLDIR)/,$(MODULES))
-	rm -f $(addprefix $(POC_INSTALLDIR)/,$(notdir $(POC_MODULES)))
-	rmdir $(POC_INSTALLDIR) 2>/dev/null || true
 
 clean:
 	-rm -fv $(PROGRAMS) *.c *.h *.o *.sym
