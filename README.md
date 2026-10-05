@@ -23,18 +23,23 @@ It moved here, with its history, from
 ```sh
 make                 # build the example programs with voc
 make test            # build, then run the fixtures in tests/
-make install         # copy ArgParser.Mod and Err.Mod to OBERON_MODULES
-make uninstall       # remove them from OBERON_MODULES
+make install         # copy ArgParser.Mod and Err.Mod to VOC_OBERON_MODULES
+make uninstall       # remove them from VOC_OBERON_MODULES
 make -f pocGNUmakefile test-poc   # build and test with poc instead
+make -f pocGNUmakefile install    # copy ArgParser.Mod to POC_OBERON_MODULES
 ```
 
 Other repos don't keep a copy of `ArgParser.Mod`. Their makefiles find
-it through `vpath` in `OBERON_MODULES`, a colon-separated list of
+it through `vpath` in `VOC_OBERON_MODULES`, a colon-separated list of
 directories, and voc builds it into their own build directories.
-`make install` copies it to the first directory in `OBERON_MODULES`
-(default `/usr/local/sw/versions/oberon/include`).
+`make install` copies it to the first directory in `VOC_OBERON_MODULES`
+(default `/usr/local/sw/versions/oberon/voc/include`).
 
 `make install` also installs `Err.Mod`, which writes text to standard
 error with the interface of `Out` (`String`, `Char` and `Ln`), for voc
 builds. poc's runtime library has its own `Err` and `Args`, which poc
 builds use instead.
+
+Other repos' poc builds find `ArgParser.Mod` in `POC_OBERON_MODULES`
+(default `/usr/local/sw/versions/oberon/poc/include`), where
+`make -f pocGNUmakefile install` copies it.

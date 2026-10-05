@@ -14,16 +14,24 @@
 # Args and Err come from poc-rtl, so Err.Mod here (the voc version) is not
 # linked into poc-build/.
 #
+# make -f pocGNUmakefile install copies ArgParser.Mod to the first directory
+# in POC_OBERON_MODULES (a colon-separated list), where other repos' poc
+# makefiles find it. Err.Mod isn't installed: poc has its own.
+#
 # POC selects another poc, by an absolute path, since it runs in poc-build:
 #
 #   make -f pocGNUmakefile POC=$HOME/Repos/Oberon/Peaseblossom/build/bin/poc
 
 POC ?= poc
 
+POC_OBERON_MODULES ?= /usr/local/sw/versions/oberon/poc/include
+INSTALLDIR = $(firstword $(subst :, ,$(POC_OBERON_MODULES)))
+MODULES = ArgParser.Mod
+
 BUILDDIR = poc-build
 PROGRAMS = Simple Commands OneName
 
-.PHONY: all clean test-poc test-verbose
+.PHONY: all clean test-poc test-verbose install uninstall
 
 # Keep the symlinks to the sources instead of deleting them as intermediates.
 .SECONDARY:
@@ -47,6 +55,16 @@ test-poc: all
 
 test-verbose: all
 	BINDIR=$(BUILDDIR) ./tests/run-tests.sh -v
+
+# Install only a module that compiles: every example program imports
+# ArgParser.
+install: all
+	install -d $(INSTALLDIR)
+	install -m 644 $(MODULES) $(INSTALLDIR)
+
+# Remove what make install copied, and only that.
+uninstall:
+	rm -f $(addprefix $(INSTALLDIR)/,$(MODULES))
 
 clean:
 	-rm -rfv $(BUILDDIR)

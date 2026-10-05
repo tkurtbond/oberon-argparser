@@ -3,11 +3,11 @@ VOCFLAGS=-f
 VOCMAIN=-m
 
 # make install copies the shared modules to the first directory in
-# OBERON_MODULES (a colon-separated list), where other repos' makefiles
+# VOC_OBERON_MODULES (a colon-separated list), where other repos' makefiles
 # find them.  Err is for voc builds: poc has its own, in its runtime
 # library.
-OBERON_MODULES ?= /usr/local/sw/versions/oberon/include
-INSTALLDIR = $(firstword $(subst :, ,$(OBERON_MODULES)))
+VOC_OBERON_MODULES ?= /usr/local/sw/versions/oberon/voc/include/
+INSTALLDIR = $(firstword $(subst :, ,$(VOC_OBERON_MODULES)))
 MODULES = ArgParser.Mod Err.Mod
 
 PROGRAMS=Simple Commands OneName

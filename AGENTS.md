@@ -12,9 +12,10 @@ here from oberon-tools so that it is installed with `ArgParser.Mod`.
 ```sh
 make                 # the example programs, with voc
 make test            # build, then run tests/*.test; ends "N ok, M failed"
-make install         # copy ArgParser.Mod and Err.Mod to the first directory in OBERON_MODULES
+make install         # copy ArgParser.Mod and Err.Mod to the first directory in VOC_OBERON_MODULES
 make uninstall       # remove them from there
 make -f pocGNUmakefile test-poc   # build and test with poc instead
+make -f pocGNUmakefile install    # copy ArgParser.Mod to the first directory in POC_OBERON_MODULES
 tests/run-tests.sh -o cmd-add cluster-repeat   # selected fixtures, with their real output
 ```
 
@@ -22,8 +23,8 @@ tests/run-tests.sh -o cmd-add cluster-repeat   # selected fixtures, with their r
   program with `voc -f -m`. A new program goes in `PROGRAMS` and in
   `.gitignore`.
 - **Other repos don't keep a copy of `ArgParser.Mod` or `Err.Mod`.**
-  Their makefiles find them through `vpath` in `OBERON_MODULES`, a colon-separated list
-  of directories (default `/usr/local/sw/versions/oberon/include`),
+  Their makefiles find them through `vpath` in `VOC_OBERON_MODULES`, a colon-separated list
+  of directories (default `/usr/local/sw/versions/oberon/voc/include`),
   and voc builds it into their own build directories. Its users are
   `~/Repos/Oberon/oberon-tools` and `~/Repos/Oberon/Ropes`.
 - **After changing `ArgParser.Mod` or `Err.Mod`, run `make test`,
@@ -36,12 +37,15 @@ tests/run-tests.sh -o cmd-add cluster-repeat   # selected fixtures, with their r
   any source of that name.
 - **`make uninstall` removes only what `make install` copied**:
   `ArgParser.Mod` and `Err.Mod` from the first directory in
-  `OBERON_MODULES`. It succeeds if they are already gone. Until
+  `VOC_OBERON_MODULES`. It succeeds if they are already gone. Until
   you install them again, the repos that use them stop with
-  "ArgParser.Mod is not in OBERON_MODULES" (or `Err.Mod`).
+  "ArgParser.Mod is not in VOC_OBERON_MODULES" (or `Err.Mod`).
 - `pocGNUmakefile` builds the programs with the installed poc (`POC`
   for another) in `poc-build/`, where the sources are symlinked. See
-  its header for why the build goes there.
+  its header for why the build goes there. Its `install` copies only
+  `ArgParser.Mod` to the first directory in `POC_OBERON_MODULES`
+  (default `/usr/local/sw/versions/oberon/poc/include`), where other
+  repos' poc makefiles find it, and `uninstall` removes it.
 - **Fixtures**: `tests/NAME.test` has the lines `program`, `arg`
   (repeatable; a bare `arg` is an empty argument), optional `env`,
   `dir` and `input`, then `status`, and `output` followed by the

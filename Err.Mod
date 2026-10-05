@@ -5,7 +5,7 @@ MODULE Err;
    Nothing is buffered.
 
    This is for voc builds, over voc's Platform; make install copies it to
-   OBERON_MODULES, with ArgParser.Mod.  poc builds use the Err of poc's
+   VOC_OBERON_MODULES, with ArgParser.Mod.  poc builds use the Err of poc's
    runtime library, which has the same procedures. *)
 
 IMPORT SYSTEM, Platform;
