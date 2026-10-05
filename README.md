@@ -26,7 +26,7 @@ make test            # build, then run the fixtures in tests/
 make install         # copy ArgParser.Mod and Err.Mod to VOC_OBERON_MODULES
 make uninstall       # remove them from VOC_OBERON_MODULES
 make -f pocGNUmakefile test-poc   # build and test with poc instead
-make -f pocGNUmakefile install    # copy ArgParser.Mod to POC_OBERON_MODULES
+make -f pocGNUmakefile install    # build the poc library argparser into POC_OBERON_LIBRARIES
 ```
 
 Other repos don't keep a copy of `ArgParser.Mod`. Their makefiles find
@@ -40,6 +40,9 @@ error with the interface of `Out` (`String`, `Char` and `Ln`), for voc
 builds. poc's runtime library has its own `Err` and `Args`, which poc
 builds use instead.
 
-Other repos' poc builds find `ArgParser.Mod` in `POC_OBERON_MODULES`
-(default `/usr/local/sw/versions/oberon/poc/include`), where
-`make -f pocGNUmakefile install` copies it.
+For poc, `make -f pocGNUmakefile install` builds ArgParser into the poc
+library `argparser`, for both size models (`-O2` and `-OC`), in
+`argparser/` under `POC_OBERON_LIBRARIES` (default `/usr/local/sw/versions/oberon/poc/lib`). Other repos' poc builds pass that
+directory to poc with `-library-path`, and link the compiled module
+instead of compiling `ArgParser.Mod` again. A library records the poc
+that built it, so install again after upgrading poc.
