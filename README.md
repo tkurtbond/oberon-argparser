@@ -12,8 +12,14 @@ A mistake on the command line, such as an unknown option or a missing
 argument, prints an error and the usage on standard error, and exits
 with status 2 (`UsageErrorStatus`).
 
-`Simple.Mod`, `Commands.Mod` and `OneName.Mod` are example programs,
-and the fixtures in `tests/` test ArgParser through them.
+A parser's `filter`, if a program sets it, is given every argument
+before it is parsed, to change it: on VAX/VMS, where DCL makes what is
+not quoted capitals, a program lowercases its options. A command's
+parser without a filter uses the one above it.
+
+`Simple.Mod`, `Commands.Mod`, `OneName.Mod` and `Folded.Mod` are
+example programs, and the fixtures in `tests/` test ArgParser through
+them. `Folded.Mod` has a filter.
 
 It moved here, with its history, from
 [`oberon-tools`](https://github.com/tkurtbond/oberon-tools).

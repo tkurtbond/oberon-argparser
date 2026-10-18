@@ -24,6 +24,9 @@ TYPE
   StringOptionHandler* = PROCEDURE (VAR arg: ARRAY OF CHAR): BOOLEAN;
   IntOptionHandler* = PROCEDURE (val: LONGINT): BOOLEAN;
   ArgumentHandler* = PROCEDURE (startIdx: INTEGER; VAR arg: ARRAY OF CHAR): BOOLEAN;
+  (* Changes an argument before it is parsed, as a program on VAX/VMS
+     lowercases its options, which DCL has made capitals. *)
+  ArgumentFilter* = PROCEDURE (VAR arg: ARRAY OF CHAR);
 
   Option* = POINTER TO OptionDesc;
   OptionDesc* = RECORD
@@ -59,6 +62,10 @@ TYPE
     argHandler*: ArgumentHandler;
     options*: Option;
     commands*: Command;  (* NIL if no commands were defined. *)
+    (* Given every argument the parser reads, options, their values and
+       ordinary arguments alike, before it parses it; NIL for none.  A
+       command's parser without one uses the one above it. *)
+    filter*: ArgumentFilter;
     parent: Parser;      (* The parser this is a command of, or NIL. *)
   END;
 
@@ -139,6 +146,7 @@ BEGIN
   p.argHandler := handler;
   p.options := NIL;
   p.commands := NIL;
+  p.filter := NIL;
   p.parent := NIL;
   RETURN p
 END NewParser;
@@ -362,6 +370,17 @@ END FindCommand;
 
 (* --- Parsing Execution --- *)
 
+(* Argument n of the command line in arg, given to p's filter, or to the
+   filter of the nearest parser above it that has one. *)
+PROCEDURE GetArg(p: Parser; n: INTEGER; VAR arg: ARRAY OF CHAR);
+VAR q: Parser;
+BEGIN
+  Args.Get(n, arg);
+  q := p;
+  WHILE (q # NIL) & (q.filter = NIL) DO q := q.parent END;
+  IF q # NIL THEN q.filter(arg) END
+END GetArg;
+
 PROCEDURE (p: Parser) ParseArguments*(startIdx: INTEGER);
 VAR
   i, numArgs: INTEGER;
@@ -398,7 +417,7 @@ BEGIN
     IF skipNext THEN
       skipNext := FALSE
     ELSE
-      Args.Get(i, arg);
+      GetArg(p, i, arg);
       IF (arg = "--") & ~dashDashSeen THEN
         dashDashSeen := TRUE
       ELSIF dashDashSeen OR (arg[0] # "-") OR (arg[1] = 0X) THEN
@@ -423,7 +442,7 @@ BEGIN
               cont := DispatchOption(p, opt, optArg)
             ELSIF i + 1 < numArgs THEN
               INC(i);
-              Args.Get(i, optArg);
+              GetArg(p, i, optArg);
               cont := DispatchOption(p, opt, optArg)
             ELSE
               ErrorStart; WriteString("Argument required for option ");
@@ -459,7 +478,7 @@ BEGIN
               cont := DispatchOption(p, opt, optArg)
             ELSIF i + 1 < numArgs THEN
               INC(i);
-              Args.Get(i, optArg);
+              GetArg(p, i, optArg);
               INC(ci);
               cont := DispatchOption(p, opt, optArg)
             ELSE

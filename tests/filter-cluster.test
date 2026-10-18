@@ -1,0 +1,7 @@
+# a filter changes a cluster of short options
+program Folded
+arg -AI7
+status 0
+output
+DoShortNameOnly called.
+DoInteger called with integer: 7

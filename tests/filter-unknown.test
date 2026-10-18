@@ -1,0 +1,21 @@
+# an unknown option is reported as the filter left it
+program Folded
+arg --NOPE
+status 2
+output
+Error: Unknown option --nope
+folded [options] [add [options]] arguments...
+
+  -s <arg>, --string <arg>
+      Call callback on string argument.
+  -i <arg>, --integer <arg>
+      Call callback on integer argument.
+  -a
+      Option with short name only.
+  --long-name
+      Option with long name only.
+
+add [options] items...  Add items.
+
+  -n <arg>, --name <arg>
+      Call callback on name argument.

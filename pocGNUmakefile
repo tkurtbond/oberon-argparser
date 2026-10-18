@@ -37,7 +37,7 @@ MODELS = O2 OC
 TRIPLE = $(shell $(POC) -version | sed -n 's/^target \([^ ]*\).*/\1/p')
 
 BUILDDIR = poc-build
-PROGRAMS = Simple Commands OneName
+PROGRAMS = Simple Commands OneName Folded
 
 .PHONY: all clean test-poc test-verbose install uninstall
 

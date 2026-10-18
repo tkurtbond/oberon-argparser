@@ -1,0 +1,6 @@
+# a filter changes an option and the value after its =
+program Folded
+arg --STRING=ABC
+status 0
+output
+DoString called with "abc"

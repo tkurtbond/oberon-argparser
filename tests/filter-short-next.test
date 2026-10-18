@@ -1,0 +1,7 @@
+# a filter changes a short option's value in the next argument
+program Folded
+arg -S
+arg XYZ
+status 0
+output
+DoString called with "xyz"

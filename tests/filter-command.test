@@ -1,0 +1,10 @@
+# a command's parser without a filter uses the main parser's
+program Folded
+arg ADD
+arg -N
+arg BOB
+arg ITEM
+status 0
+output
+add: DoAddName called with "bob"
+add: ArgHandler called at index 4 with argument: "item"

@@ -10,7 +10,7 @@ VOC_OBERON_MODULES ?= /usr/local/sw/versions/oberon/voc/include/
 INSTALLDIR = $(firstword $(subst :, ,$(VOC_OBERON_MODULES)))
 MODULES = ArgParser.Mod Err.Mod
 
-PROGRAMS=Simple Commands OneName
+PROGRAMS=Simple Commands OneName Folded
 
 .PHONY: all clean test test-verbose install uninstall
 

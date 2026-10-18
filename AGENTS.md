@@ -2,7 +2,9 @@
 
 Working notes for an agent in this repo, which holds `ArgParser.Mod`,
 an Oberon-2 command-line parser built with voc (Vishap Oberon), and
-its example programs `Simple.Mod`, `Commands.Mod` and `OneName.Mod`.
+its example programs `Simple.Mod`, `Commands.Mod`, `OneName.Mod` and
+`Folded.Mod` (a parser with a `filter`, which opp uses on VAX/VMS to
+lowercase options).
 It moved here, with its history, from `~/Repos/Oberon/oberon-tools`.
 It also holds `Err.Mod`, text output to standard error, which moved
 here from oberon-tools so that it is installed with `ArgParser.Mod`.

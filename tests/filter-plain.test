@@ -1,0 +1,8 @@
+# a filter changes ordinary arguments too
+program Folded
+arg --LONG-NAME
+arg FILE.MOD
+status 0
+output
+DoLongNameOnly called.
+ArgHandler called at index 2 with argument: "file.mod"
