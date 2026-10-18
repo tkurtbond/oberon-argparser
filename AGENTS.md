@@ -19,6 +19,8 @@ make uninstall       # remove them from there
 make -f pocGNUmakefile test-poc   # build and test with poc instead
 make -f pocGNUmakefile install    # build the poc library argparser (-O2 and -OC) into POC_OBERON_LIBRARIES/argparser
 tests/run-tests.sh -o cmd-add cluster-repeat   # selected fixtures, with their real output
+make distcheck       # write the release tarball in dist/, then build and test it unpacked
+make dist-sign       # sign it (gpg, GPG_KEY for another key)
 ```
 
 - The `GNUmakefile` builds a library module with `voc -f -s` and a
@@ -74,3 +76,29 @@ tests/run-tests.sh -o cmd-add cluster-repeat   # selected fixtures, with their r
   arguments.
 - An argument or option value longer than `MaxStringLength` (4095)
   characters is cut short without an error.
+
+## Making a release
+
+`VERSION` in the `GNUmakefile` is the version, `x.y.z`; `NEWS.md` has a
+section for each release, `## x.y.z (date)`, newest first, saying what
+changed for a program that uses ArgParser. To release:
+
+1. Set `VERSION`, and write its section in `NEWS.md` (`git log
+   v<last>..`).
+2. `make test` and `make -f pocGNUmakefile test-poc`; then `make
+   install` and `make -f pocGNUmakefile install`, and rebuild and test
+   the repos that use ArgParser (opp, oberon-tools, Ropes).
+3. Commit ("ArgParser x.y.z") and push.
+4. `make distcheck`, then `make dist-sign`. `make dist` refuses a working
+   tree that differs from `HEAD`, a `NEWS.md` without the version's
+   section, and a tag `vx.y.z` on another commit. Each run writes a new
+   tarball, so sign and publish the one `distcheck` checked.
+5. Tag, signed, and push the tag: `git tag -s vx.y.z -m "ArgParser
+   x.y.z"`, `git tag -v vx.y.z`, `git push origin vx.y.z`.
+6. Publish: `gh release create vx.y.z
+   dist/oberon-argparser-x.y.z.tar.gz{,.sha256,.asc} --title "ArgParser
+   x.y.z" --notes-file <notes>`, the notes being `NEWS.md`'s section and
+   how to install (the README's "Building, testing and installing").
+
+gpg asks for the key's passphrase for the tag and the signature; in a
+terminal, with `GPG_TTY=$(tty)`.

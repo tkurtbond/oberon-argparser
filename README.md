@@ -33,7 +33,12 @@ make install         # copy ArgParser.Mod and Err.Mod to VOC_OBERON_MODULES
 make uninstall       # remove them from VOC_OBERON_MODULES
 make -f pocGNUmakefile test-poc   # build and test with poc instead
 make -f pocGNUmakefile install    # build the poc library argparser into POC_OBERON_LIBRARIES
+make distcheck       # write dist/oberon-argparser-VERSION.tar.gz and test it
 ```
+
+Releases are on GitHub's releases page, each a tarball with its `.sha256`
+and a signature, `.asc`; `NEWS.md` says what each one changed. Unpack
+one and install it as above.
 
 Other repos don't keep a copy of `ArgParser.Mod`. Their makefiles find
 it through `vpath` in `VOC_OBERON_MODULES`, a colon-separated list of
