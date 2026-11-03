@@ -32,7 +32,7 @@ make test            # build, then run the fixtures in tests/
 make install         # copy ArgParser.Mod and Err.Mod to VOC_OBERON_MODULES
 make uninstall       # remove them from VOC_OBERON_MODULES
 make -f pocGNUmakefile test-poc   # build and test with poc instead
-make -f pocGNUmakefile install    # build the poc library argparser into POC_OBERON_LIBRARIES
+make -f pocGNUmakefile install    # build the poc library argparser into POCLIBDIR, ~/.local/lib/poc
 make distcheck       # write dist/oberon-argparser-VERSION.tar.gz and test it
 ```
 
@@ -52,8 +52,10 @@ builds. poc's runtime library has its own `Err` and `Args`, which poc
 builds use instead.
 
 For poc, `make -f pocGNUmakefile install` builds ArgParser into the poc
-library `argparser`, for both size models (`-O2` and `-OC`), in
-`argparser/` under `POC_OBERON_LIBRARIES` (default `/usr/local/sw/versions/oberon/poc/lib`). Other repos' poc builds pass that
-directory to poc with `-library-path`, and link the compiled module
-instead of compiling `ArgParser.Mod` again. A library records the poc
-that built it, so install again after upgrading poc.
+library `argparser`, for both size models (`-O2` and `-OC`), with and
+without debug information (`-g`), in `POCLIBDIR` (default
+`$(PREFIX)/lib/poc`, with `PREFIX` default `~/.local`). Other repos'
+poc builds pass that directory to poc with `-library-path`, and link
+the compiled module instead of compiling `ArgParser.Mod` again. A
+library records the poc that built it, so install again after
+upgrading poc.

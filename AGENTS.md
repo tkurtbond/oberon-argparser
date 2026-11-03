@@ -17,7 +17,7 @@ make test            # build, then run tests/*.test; ends "N ok, M failed"
 make install         # copy ArgParser.Mod and Err.Mod to the first directory in VOC_OBERON_MODULES
 make uninstall       # remove them from there
 make -f pocGNUmakefile test-poc   # build and test with poc instead
-make -f pocGNUmakefile install    # build the poc library argparser (-O2 and -OC) into POC_OBERON_LIBRARIES/argparser
+make -f pocGNUmakefile install    # build the poc library argparser (-O2 and -OC, with and without -g) into POCLIBDIR
 tests/run-tests.sh -o cmd-add cluster-repeat   # selected fixtures, with their real output
 make distcheck       # write the release tarball in dist/, then build and test it unpacked
 make dist-sign       # sign it (gpg, GPG_KEY for another key)
@@ -46,9 +46,13 @@ make dist-sign       # sign it (gpg, GPG_KEY for another key)
   "ArgParser.Mod is not in VOC_OBERON_MODULES" (or `Err.Mod`).
 - `pocGNUmakefile` builds the programs with the installed poc (`POC`
   for another) in `poc-build/`, where the sources are symlinked. See
-  its header for why the build goes there. Its `install` builds the
-  poc library `argparser`, for `-O2` and `-OC`, in `argparser/` under
-  `POC_OBERON_LIBRARIES` (default `/usr/local/sw/versions/oberon/poc/lib`), where other repos' poc makefiles find it with
+  its header for why the build goes there. The programs take ArgParser
+  from the library built in `poc-build/lib/`, and the makefile
+  unexports `POC_LIBRARY_PATH`, so an installed `argparser` is never
+  tested in place of this checkout. Its `install` installs the poc
+  library `argparser`, for `-O2` and `-OC`, with and without `-g`, in
+  `POCLIBDIR` (default `$(PREFIX)/lib/poc`, with `PREFIX` default
+  `~/.local`), where other repos' poc makefiles find it with
   `-library-path`, and `uninstall` removes what it wrote. poc refuses
   a library built by another poc version: install again after
   upgrading poc.
